@@ -48,5 +48,5 @@ crashlytics.properties
 crashlytics-build.properties
 
 
-.node_modules/
+node_modules/
 bundle.js
