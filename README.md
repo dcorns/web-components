@@ -1,7 +1,7 @@
 # web-components
 A collection of custom web components
 ## How to use
-Currently the components are wrapped in a node module so you can use with node and a tool like browserify. Just require it like any other node module that is not installed via npm `var comps = require(../<path>/dgComponents);`
+Currently the components are wrapped in a node module so you can use with node and a tool like browserify. Just require it like any other node module that is not installed via npm `var comps = require(./<path>/dgComponents);`
 Then invoke the component that you want to use as a property of the object returned by require. Each component will have it's own particular instructions for usage, but at a minimum, you will need to invoke the component in javascript and place it's corresponding tag in your html file. 
 There is only one component right now, but more will follow as I require them on various projects. Feel free to submit your own if you want to contribute.
 ## super-select
