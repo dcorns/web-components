@@ -20,9 +20,11 @@ module.exports = function(){
         //console.dir(this.shadowRoot.children);
 
 
-        shadowdom.innerHTML = '<section><input><button>*</button><input type="number" value="5"><ul></ul><section></section></section>';
+        shadowdom.innerHTML = '<label id="lblError"></label><content></content><section class="listStyle" id="ss"><section id="filters" on-click="filterclicked"></section><input id="searchTxt" on-mouseenter="searchTxtMouseEnter" on-mouseout="searchTxtMouseOut" on-click="searchTxtClick" value="{{searchText::input}}"><button id="btnPref" on-click="preferenceBtn">off</button><input on-change="listSize" class="numToShow" type="number" min="1" max="99" value="5"><ul id="ssul" on-click="ulClicked"></ul><section id="ssdescript" class="descStyle"></section></section>';
 
         //var subHTML = this.shadowRoot.children;
+        this.shadowRoot.firstChild.innerHTML = "test this";
+        console.dir(this.shadowRoot.children);
         var sSelect = this.shadowRoot.firstChild, sSKids = sSelect.children, searchTxt = sSKids[0], preferenceBtn = sSKids[1], numItemsToDisplay = sSKids[2], itemList = sSKids[3], sSDescriptions = sSKids[4];
         //Set Internal Styles
         numItemsToDisplay.style.width = '30px';
