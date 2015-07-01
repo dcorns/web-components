@@ -5,7 +5,7 @@
 'use strict';
 var comps = require('./dgComponents');
 require('webcomponents.js');
-console.dir(comps);
+
 var obj = {};
 
 obj.datalist = [
