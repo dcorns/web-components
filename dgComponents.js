@@ -66,19 +66,27 @@ module.exports = function(){
 
         this.preferenceBtn.addEventListener('click', function (e) {
           var btn = e.target;
-          console.log(btn.dataset.searchfactor);
+          var ss = e.path[4]; //provides access to ss methods from the DOM
           var searchTxt = btn.previousElementSibling;
+          var iList = btn.nextElementSibling.nextElementSibling;
+          console.dir(iList);
           switch (btn.dataset.searchfactor) {
             case '0':
               btn.dataset.searchfactor = '1';
               btn.innerHTML = '1st';
-              this.search(searchTxt.value);
+              ss.search(iList, 1, searchTxt.value);
               searchTxt.focus();
               break;
             case '1':
               btn.dataset.searchfactor = '2';
               btn.innerHTML = 'all';
-              this.search(searchTxt.value);
+              ss.search(iList, 2, searchTxt.value);
+              searchTxt.focus();
+              break;
+            case '2':
+              btn.dataset.searchfactor = '0';
+              btn.innerHTML = 'off';
+              ss.search(iList, 0, searchTxt.value);
               searchTxt.focus();
               break;
             default:
@@ -95,65 +103,7 @@ module.exports = function(){
         //  e.target.parentNode.parentNode.host.numToShow = e.target.value;
         //});
         this.ready();
-       // loadDefaults();
-       // function loadDefaults(){
-       //   var data = shadowdom.host.dataset, items = obj[data.items], filters = obj[data.filters], titles = obj[data.titles];
-       //   var extraTitles = false;
-       //   if(titles.length > 1) extraTitles = true;
-       //   var totalItems = shadowdom.host.totalItems = items.length;
-       //   var numItemsShow = shadowdom.host.numToShow;
-       //   var idx = shadowdom.host.lastItemIndex;
-       //   if(titles){
-       //     var len = numItemsShow, c = idx, el;
-       //     for(c;c<len;c++){
-       //       el = document.createElement('li');
-       //       el.innerHTML = items[c][titles[0].prop];
-       //       if(extraTitles){
-       //         var len2 = titles.length, c2 = 1;
-       //         for(c2;c2<len2;c2++){
-       //           el.setAttribute('data-' + titles[c2].prop, items[c][titles[c2].prop]);
-       //         }
-       //         el.addEventListener('mouseenter', function(e){
-       //           e.target.style.backgroundColor = 'grey';
-       //           var data = e.target.dataset;
-       //           var sSDescKids = sSDescriptions.children;
-       //           for(var prop in data){
-       //             if(data.hasOwnProperty(prop)){
-       //               c2 = 0;  len2 = sSDescKids.length;
-       //               for(c2;c2<len2;c2++){
-       //                 if(prop === sSDescKids[c2].innerHTML.toLowerCase()){
-       //                   c2++;
-       //                   sSDescKids[c2].innerHTML = data[prop];
-       //                 }
-       //               }
-       //             }
-       //           }
-       //
-       //         });
-       //         el.addEventListener('mouseout', function(e){e.target.style.backgroundColor = 'white';});
-       //       }
-       //       else{
-       //         el.addEventListener('mouseenter', function(e){e.target.style.backgroundColor = 'grey';});
-       //         el.addEventListener('mouseout', function(e){e.target.style.backgroundColor = 'white';});
-       //       }
-       //       itemList.appendChild(el);
-       //     }
-       //     if(extraTitles){
-       //       var descData;
-       //       len = titles.length; c = 1;
-       //       for(c;c<len;c++){
-       //         el = document.createElement(titles[c].tag);
-       //         el.innerHTML = titles[c].prop;
-       //         el.style.paddingRight = '10px';
-       //         el.style.display = 'flex';
-       //         descData = document.createElement('label');
-       //         descData.style.display = 'flex';
-       //         sSDescriptions.appendChild(el);
-       //         sSDescriptions.appendChild(descData);
-       //       }
-       //     }
-       //   }
-       // }
+
       };
 
       proto.checkItemList = function(){
@@ -309,60 +259,59 @@ module.exports = function(){
         }
       };
 
-      proto.search = function (e) {
-        console.log(e);
-        //if(document.getElementById('ssul')) {
-        //  var sf = this.searchFactor, c = 0, domItems = document.getElementById('ssul').children, len = domItems.length, showItem;
-        //  if (sf > 0) {
-        //    var testText = e.toLocaleLowerCase(), itemText;
-        //    if (sf > 1) {
-        //      for (c; c < len; c++) {
-        //        showItem = domItems[c].dataset['show'];
-        //        if (showItem === 'true') {
-        //          itemText = domItems[c].textContent.toLocaleLowerCase();
-        //          if (itemText.indexOf(testText) > -1) {
-        //            domItems[c].hidden = false;
-        //          }
-        //          else {
-        //            domItems[c].hidden = true;
-        //          }
-        //        }
-        //        else {
-        //          domItems[c].hidden = true;
-        //        }
-        //      }
-        //    }
-        //    else {
-        //      var elen = testText.length;
-        //      for (c; c < len; c++) {
-        //        showItem = domItems[c].dataset['show'];
-        //        if (showItem === 'true') {
-        //          itemText = domItems[c].textContent.toLocaleLowerCase();
-        //          if (itemText.slice(0, elen) === testText) {
-        //            domItems[c].hidden = false;
-        //          }
-        //          else {
-        //            domItems[c].hidden = true;
-        //          }
-        //        }
-        //        else {
-        //          domItems[c].hidden = true;
-        //        }
-        //      }
-        //    }
-        //  }
-        //  else {
-        //    for (c; c < len; c++) {
-        //      showItem = domItems[c].dataset['show'];
-        //      if (showItem === 'true') {
-        //        domItems[c].hidden = false;
-        //      }
-        //      else {
-        //        domItems[c].hidden = true;
-        //      }
-        //    }
-        //  }
-        //}
+      proto.search = function (ssul, sf, searchTxt) {
+        if(ssul) {
+          var c = 0, domItems = ssul.children, len = domItems.length, showItem;
+          if (sf > 0) {
+            var testText = searchTxt.toLocaleLowerCase(), itemText;
+            if (sf > 1) {
+              for (c; c < len; c++) {
+                showItem = domItems[c].dataset['show'];
+                if (showItem === 'true') {
+                  itemText = domItems[c].textContent.toLocaleLowerCase();
+                  if (itemText.indexOf(testText) > -1) {
+                    domItems[c].hidden = false;
+                  }
+                  else {
+                    domItems[c].hidden = true;
+                  }
+                }
+                else {
+                  domItems[c].hidden = true;
+                }
+              }
+            }
+            else {
+              var elen = testText.length;
+              for (c; c < len; c++) {
+                showItem = domItems[c].dataset['show'];
+                if (showItem === 'true') {
+                  itemText = domItems[c].textContent.toLocaleLowerCase();
+                  if (itemText.slice(0, elen) === testText) {
+                    domItems[c].hidden = false;
+                  }
+                  else {
+                    domItems[c].hidden = true;
+                  }
+                }
+                else {
+                  domItems[c].hidden = true;
+                }
+              }
+            }
+          }
+          else {
+            for (c; c < len; c++) {
+              showItem = domItems[c].dataset['show'];
+              if (showItem === 'true') {
+                domItems[c].hidden = false;
+              }
+              else {
+                domItems[c].hidden = true;
+              }
+            }
+          }
+        }
       };
 
       document.registerElement('super-select', {prototype: proto});
