@@ -23,11 +23,12 @@ module.exports = function(){
         //console.dir(this.shadowRoot.children);
 
 
-        shadowdom.innerHTML = '<section><label></label><content></content><section><input id="searchTxt" on-mouseenter="searchTxtMouseEnter" on-mouseout="searchTxtMouseOut" on-click="searchTxtClick" ><button id="btnPref" on-click="preferenceBtn">off</button><input on-change="listSize" class="numToShow" type="number" min="1" max="99" value="5"><ul on-click="ulClicked"></ul><section id="ssdescript" class="descStyle"></section></section></section>';
+        shadowdom.innerHTML = '<section><label></label><content></content><section><input><button data-searchfactor="0">off</button><input class="numToShow" type="number" min="1" max="99" value="5"><ul></ul><section class="descStyle"></section></section></section>';
 
         //setup shadowdom access
         proto.compRoot = this.shadowRoot.children[0];
         proto.lblError = this.compRoot.children[0];
+        proto.compRoot = this.shadowRoot.children[0];
         proto.sSelect = this.compRoot.children[2];
         var sSKids = this.sSelect.children;
         proto.searchTxt = sSKids[0];
@@ -50,31 +51,44 @@ module.exports = function(){
         var errorStyle = this.lblError.style;
         errorStyle.border = '3px red inset'; errorStyle.width = '200px'; errorStyle.display = 'inline-block'; errorStyle.backgroundColor = '#e1bee7';
         //Add event listeners for sub elements
-        //searchTxt.addEventListener('keyup', function(e){
-        //  console.log(e.target.value);
-        //});
-        //searchTxt.addEventListener('mouseenter', function(e){
-        //  e.target.style.backgroundColor = 'grey';
-        //});
-        //searchTxt.addEventListener('mouseout', function(e){
-        //  e.target.style.backgroundColor = 'white';
-        //});
-        //searchTxt.addEventListener('click', function(e){
-        //  e.target.style.backgroundColor = 'white';
-        //});
-        //preferenceBtn.addEventListener('click', function(e){
-        //  var showAll = e.target.parentNode.parentNode.host.showAll;
-        //  if(showAll){
-        //    e.target.parentNode.parentNode.host.showAll = false;
-        //    preferenceBtn.innerHTML = '*'
-        //  }
-        //  else{
-        //    e.target.parentNode.parentNode.host.showAll = true;
-        //    preferenceBtn.innerHTML = '@'
-        //  }
-        //  console.log(showAll);
-        //});
-        //
+        this.searchTxt.addEventListener('keyup', function(e){
+          console.log(e.target.value);
+        });
+        this.searchTxt.addEventListener('mouseenter', function(e){
+          e.target.style.backgroundColor = 'grey';
+        });
+        this.searchTxt.addEventListener('mouseout', function(e){
+          e.target.style.backgroundColor = 'white';
+        });
+        this.searchTxt.addEventListener('click', function(e){
+          e.target.style.backgroundColor = 'white';
+        });
+
+        this.preferenceBtn.addEventListener('click', function (e) {
+          var btn = e.target;
+          console.log(btn.dataset.searchfactor);
+          var searchTxt = btn.previousElementSibling;
+          switch (btn.dataset.searchfactor) {
+            case '0':
+              btn.dataset.searchfactor = '1';
+              btn.innerHTML = '1st';
+              this.search(searchTxt.value);
+              searchTxt.focus();
+              break;
+            case '1':
+              btn.dataset.searchfactor = '2';
+              btn.innerHTML = 'all';
+              this.search(searchTxt.value);
+              searchTxt.focus();
+              break;
+            default:
+              btn.dataset.searchfactor = '0';
+              searchTxt.value = '';
+              btn.innerHTML = 'off';
+              break;
+          }
+        });
+
         //numItemsToDisplay.addEventListener('change', function(e){
         //  console.log(e.target.value);
         //  console.log(e.target.parentNode.parentNode.host.numToShow);
@@ -82,64 +96,64 @@ module.exports = function(){
         //});
         this.ready();
        // loadDefaults();
-        function loadDefaults(){
-          var data = shadowdom.host.dataset, items = obj[data.items], filters = obj[data.filters], titles = obj[data.titles];
-          var extraTitles = false;
-          if(titles.length > 1) extraTitles = true;
-          var totalItems = shadowdom.host.totalItems = items.length;
-          var numItemsShow = shadowdom.host.numToShow;
-          var idx = shadowdom.host.lastItemIndex;
-          if(titles){
-            var len = numItemsShow, c = idx, el;
-            for(c;c<len;c++){
-              el = document.createElement('li');
-              el.innerHTML = items[c][titles[0].prop];
-              if(extraTitles){
-                var len2 = titles.length, c2 = 1;
-                for(c2;c2<len2;c2++){
-                  el.setAttribute('data-' + titles[c2].prop, items[c][titles[c2].prop]);
-                }
-                el.addEventListener('mouseenter', function(e){
-                  e.target.style.backgroundColor = 'grey';
-                  var data = e.target.dataset;
-                  var sSDescKids = sSDescriptions.children;
-                  for(var prop in data){
-                    if(data.hasOwnProperty(prop)){
-                      c2 = 0;  len2 = sSDescKids.length;
-                      for(c2;c2<len2;c2++){
-                        if(prop === sSDescKids[c2].innerHTML.toLowerCase()){
-                          c2++;
-                          sSDescKids[c2].innerHTML = data[prop];
-                        }
-                      }
-                    }
-                  }
-
-                });
-                el.addEventListener('mouseout', function(e){e.target.style.backgroundColor = 'white';});
-              }
-              else{
-                el.addEventListener('mouseenter', function(e){e.target.style.backgroundColor = 'grey';});
-                el.addEventListener('mouseout', function(e){e.target.style.backgroundColor = 'white';});
-              }
-              itemList.appendChild(el);
-            }
-            if(extraTitles){
-              var descData;
-              len = titles.length; c = 1;
-              for(c;c<len;c++){
-                el = document.createElement(titles[c].tag);
-                el.innerHTML = titles[c].prop;
-                el.style.paddingRight = '10px';
-                el.style.display = 'flex';
-                descData = document.createElement('label');
-                descData.style.display = 'flex';
-                sSDescriptions.appendChild(el);
-                sSDescriptions.appendChild(descData);
-              }
-            }
-          }
-        }
+       // function loadDefaults(){
+       //   var data = shadowdom.host.dataset, items = obj[data.items], filters = obj[data.filters], titles = obj[data.titles];
+       //   var extraTitles = false;
+       //   if(titles.length > 1) extraTitles = true;
+       //   var totalItems = shadowdom.host.totalItems = items.length;
+       //   var numItemsShow = shadowdom.host.numToShow;
+       //   var idx = shadowdom.host.lastItemIndex;
+       //   if(titles){
+       //     var len = numItemsShow, c = idx, el;
+       //     for(c;c<len;c++){
+       //       el = document.createElement('li');
+       //       el.innerHTML = items[c][titles[0].prop];
+       //       if(extraTitles){
+       //         var len2 = titles.length, c2 = 1;
+       //         for(c2;c2<len2;c2++){
+       //           el.setAttribute('data-' + titles[c2].prop, items[c][titles[c2].prop]);
+       //         }
+       //         el.addEventListener('mouseenter', function(e){
+       //           e.target.style.backgroundColor = 'grey';
+       //           var data = e.target.dataset;
+       //           var sSDescKids = sSDescriptions.children;
+       //           for(var prop in data){
+       //             if(data.hasOwnProperty(prop)){
+       //               c2 = 0;  len2 = sSDescKids.length;
+       //               for(c2;c2<len2;c2++){
+       //                 if(prop === sSDescKids[c2].innerHTML.toLowerCase()){
+       //                   c2++;
+       //                   sSDescKids[c2].innerHTML = data[prop];
+       //                 }
+       //               }
+       //             }
+       //           }
+       //
+       //         });
+       //         el.addEventListener('mouseout', function(e){e.target.style.backgroundColor = 'white';});
+       //       }
+       //       else{
+       //         el.addEventListener('mouseenter', function(e){e.target.style.backgroundColor = 'grey';});
+       //         el.addEventListener('mouseout', function(e){e.target.style.backgroundColor = 'white';});
+       //       }
+       //       itemList.appendChild(el);
+       //     }
+       //     if(extraTitles){
+       //       var descData;
+       //       len = titles.length; c = 1;
+       //       for(c;c<len;c++){
+       //         el = document.createElement(titles[c].tag);
+       //         el.innerHTML = titles[c].prop;
+       //         el.style.paddingRight = '10px';
+       //         el.style.display = 'flex';
+       //         descData = document.createElement('label');
+       //         descData.style.display = 'flex';
+       //         sSDescriptions.appendChild(el);
+       //         sSDescriptions.appendChild(descData);
+       //       }
+       //     }
+       //   }
+       // }
       };
 
       proto.checkItemList = function(){
@@ -293,6 +307,62 @@ module.exports = function(){
             this.sSDescriptions.appendChild(el);
           }
         }
+      };
+
+      proto.search = function (e) {
+        console.log(e);
+        //if(document.getElementById('ssul')) {
+        //  var sf = this.searchFactor, c = 0, domItems = document.getElementById('ssul').children, len = domItems.length, showItem;
+        //  if (sf > 0) {
+        //    var testText = e.toLocaleLowerCase(), itemText;
+        //    if (sf > 1) {
+        //      for (c; c < len; c++) {
+        //        showItem = domItems[c].dataset['show'];
+        //        if (showItem === 'true') {
+        //          itemText = domItems[c].textContent.toLocaleLowerCase();
+        //          if (itemText.indexOf(testText) > -1) {
+        //            domItems[c].hidden = false;
+        //          }
+        //          else {
+        //            domItems[c].hidden = true;
+        //          }
+        //        }
+        //        else {
+        //          domItems[c].hidden = true;
+        //        }
+        //      }
+        //    }
+        //    else {
+        //      var elen = testText.length;
+        //      for (c; c < len; c++) {
+        //        showItem = domItems[c].dataset['show'];
+        //        if (showItem === 'true') {
+        //          itemText = domItems[c].textContent.toLocaleLowerCase();
+        //          if (itemText.slice(0, elen) === testText) {
+        //            domItems[c].hidden = false;
+        //          }
+        //          else {
+        //            domItems[c].hidden = true;
+        //          }
+        //        }
+        //        else {
+        //          domItems[c].hidden = true;
+        //        }
+        //      }
+        //    }
+        //  }
+        //  else {
+        //    for (c; c < len; c++) {
+        //      showItem = domItems[c].dataset['show'];
+        //      if (showItem === 'true') {
+        //        domItems[c].hidden = false;
+        //      }
+        //      else {
+        //        domItems[c].hidden = true;
+        //      }
+        //    }
+        //  }
+        //}
       };
 
       document.registerElement('super-select', {prototype: proto});
