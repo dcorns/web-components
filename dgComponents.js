@@ -23,7 +23,7 @@ module.exports = function(){
         //console.dir(this.shadowRoot.children);
 
 
-        shadowdom.innerHTML = '<section><label></label><content></content><section><section></section><input id="searchTxt" on-mouseenter="searchTxtMouseEnter" on-mouseout="searchTxtMouseOut" on-click="searchTxtClick" ><button id="btnPref" on-click="preferenceBtn">off</button><input on-change="listSize" class="numToShow" type="number" min="1" max="99" value="5"><ul on-click="ulClicked"></ul><section id="ssdescript" class="descStyle"></section></section></section>';
+        shadowdom.innerHTML = '<section><label></label><content></content><section><input id="searchTxt" on-mouseenter="searchTxtMouseEnter" on-mouseout="searchTxtMouseOut" on-click="searchTxtClick" ><button id="btnPref" on-click="preferenceBtn">off</button><input on-change="listSize" class="numToShow" type="number" min="1" max="99" value="5"><ul on-click="ulClicked"></ul><section id="ssdescript" class="descStyle"></section></section></section>';
 
         //setup shadowdom access
         proto.compRoot = this.shadowRoot.children[0];
@@ -146,16 +146,17 @@ module.exports = function(){
           //check if itemlist is an Array
           if(!(Object.prototype.toString.call(this.itemlist) === '[object Array]')){
             this.lblError.innerHTML = 'super-select "itemlist" property must be an array';
-            return;
+            return false;
           }
           if(!(Object.prototype.toString.call(this.itemlist[0]) === '[object Object]')){
             this.lblError.innerHTML = 'super-select "itemlist" property must be an array of OBJECTS';
+            return false
           }
           else{
             if(this.checkDisplayItems()){
               this.sSelect.style.display = 'block';
               this.lblError.style.display = 'none';
-              this.populateList();
+              return true
             }
           }
       };
@@ -216,10 +217,10 @@ module.exports = function(){
         //var ss = this.shadowRoot.children[2]; //lblError = this.shadowRoot.children[0];
         this.sSelect.style.display = 'none';
         this.lblError.innerHTML = 'super-select requires the itemlist property to be set as an array with at list one object. Also, the diplayitems property must be set to an array with at least one object of the form [{prop: value}] where value is the property name who\'s values will be used to make up the list';
-        console.dir(this.dataset);
         var data = this.dataset;
         this.itemlist = obj[data.itemlist]; this.associations = obj[data.associations]; this.displayitems = obj[data.displayitems];
-        this.checkItemList();
+        if(this.checkItemList()) this.populateList();
+
       };
 
       proto.populateList = function (){
@@ -241,7 +242,8 @@ module.exports = function(){
             el.addEventListener('mouseenter', function (e) {
               e.target.style.backgroundColor = 'grey';
               var data = e.target.dataset, p, lbl, txt;
-              this.sSDescriptions.innerHTML = '';
+              var sSDescriptions = e.target.parentElement.nextElementSibling;
+              sSDescriptions.innerHTML = '';
               var liData;
               for (var prop in data) {
                 if (data.hasOwnProperty(prop) && prop !== 'subjects' && prop !== 'show') {
@@ -261,7 +263,7 @@ module.exports = function(){
                   txt.innerHTML = liData.iData;
                   p.appendChild(lbl);
                   p.appendChild(txt);
-                  this.sSDescriptions.appendChild(p);
+                  sSDescriptions.appendChild(p);
                 }
               }
             });
