@@ -23,13 +23,13 @@ module.exports = function(){
         //console.dir(this.shadowRoot.children);
 
 
-        shadowdom.innerHTML = '<section><label></label><content></content><section><input><button data-searchfactor="0">off</button><input class="numToShow" type="number" min="1" max="99" value="5"><ul></ul><section class="descStyle"></section></section></section>';
+        shadowdom.innerHTML = '<section><label></label><content></content><section></section><section><input><button data-searchfactor="0">off</button><input class="numToShow" type="number" min="1" max="99" value="5"><ul></ul><section class="descStyle"></section></section></section>';
 
         //setup shadowdom access
         proto.compRoot = this.shadowRoot.children[0];
         proto.lblError = this.compRoot.children[0];
-        proto.compRoot = this.shadowRoot.children[0];
-        proto.sSelect = this.compRoot.children[2];
+        proto.filters = this.compRoot.children[2];
+        proto.sSelect = this.compRoot.children[3];
         var sSKids = this.sSelect.children;
         proto.searchTxt = sSKids[0];
         proto.preferenceBtn = sSKids[1];
@@ -97,14 +97,74 @@ module.exports = function(){
           }
         });
 
-        //numItemsToDisplay.addEventListener('change', function(e){
-        //  console.log(e.target.value);
-        //  console.log(e.target.parentNode.parentNode.host.numToShow);
-        //  e.target.parentNode.parentNode.host.numToShow = e.target.value;
-        //});
+        this.numItemsToDisplay.addEventListener('change', function(e){
+            var numToShow = e.target.value;
+          console.dir(e.target.nextElementSibling);
+          e.target.nextElementSibling.style.height = (numToShow * 20).toString() + 'px';
+        });
+
+        this.filters.addEventListener('click', function(e){
+          console.log('filters clicked');
+          console.dir(e.target.nextElementSibling.nextElementSibling.nextElementSibling);
+            if(document.getElementById('ssul')){
+              var filter = this.filter, len2 = filter.length;
+              var domItems = document.getElementById('ssul').children;
+              var c = 0, len = domItems.length, showItem = true;
+              for (c; c < len; c++) {
+                if (len2 > 0) {
+                  var subjects = JSON.parse(domItems[c].dataset.subjects);
+                  var c2 = 0;
+                  showItem = false;
+                  for (c2; c2 < len2; c2++) {
+                    if (!(showItem)) {
+                      var c3 = 0, len3 = subjects.length;
+                      for (c3; c3 < len3; c3++) {
+                        if (filter[c2] === subjects[c3].toString()) {
+                          showItem = true;
+                          break;
+                        }
+                      }
+                    }
+                    else break;
+                  }
+                }
+                if (showItem) domItems[c].dataset['show'] = 'true';
+                else domItems[c].dataset['show'] = 'false';
+              }
+              this.search(ssul, sf, searchTxt);
+            }
+        });
+
         this.ready();
 
       };
+
+      proto.makeFilter = function () {
+        var filters = this.filters, len = this.associations.length, c = 1, cb, cblbl, id, name;
+        for (c; c < len; c++) {
+          id = this.associations[c].id;
+          name = this.associations[c].name;
+          cb = document.createElement('input');
+          cb.setAttribute('type', 'checkbox');
+          cb.setAttribute('data-id', id);
+          cb.setAttribute('id', 'cb' + id);
+          cb.setAttribute('value', id);
+          cb.title = name;
+          cblbl = document.createElement('label');
+          cblbl.setAttribute('for', 'cb' + id);
+          cblbl.innerHTML = name;
+          filters.appendChild(cb);
+          filters.appendChild(cblbl);
+          var aKey = this.associations[0]['appliesTo'], items = this.itemlist;
+          var domItems = this.itemList.children;
+          var c2 = 0, len2 = domItems.length;
+          for (c2; c2 < len2; c2++) {
+            domItems[c2].setAttribute('data-subjects', JSON.stringify(items[c2][aKey]));
+            domItems[c2].setAttribute('data-show', 'true');
+          }
+        }
+      };
+
 
       proto.checkItemList = function(){
           //check if itemlist is an Array
@@ -183,7 +243,7 @@ module.exports = function(){
         this.lblError.innerHTML = 'super-select requires the itemlist property to be set as an array with at list one object. Also, the diplayitems property must be set to an array with at least one object of the form [{prop: value}] where value is the property name who\'s values will be used to make up the list';
         var data = this.dataset;
         this.itemlist = obj[data.itemlist]; this.associations = obj[data.associations]; this.displayitems = obj[data.displayitems];
-        if(this.checkItemList()) this.populateList();
+        if(this.checkItemList()) this.populateList(); this.makeFilter();
 
       };
 
