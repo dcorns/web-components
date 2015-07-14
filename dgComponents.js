@@ -104,11 +104,13 @@ module.exports = function(){
         });
 
         this.filters.addEventListener('click', function(e){
-          console.log('filters clicked');
-          console.dir(e.target.nextElementSibling.nextElementSibling.nextElementSibling);
-            if(document.getElementById('ssul')){
-              var filter = this.filter, len2 = filter.length;
-              var domItems = document.getElementById('ssul').children;
+          var ssChildren = e.target.parentElement.nextElementSibling.childNodes;
+          var searchTxt = ssChildren[0].value;
+          var ssul = ssChildren[3];
+          var sf = ssChildren[1].dataset.searchfactor;
+            if(ssul){
+              var filter = this.filters, len2 = filter.length;
+              var domItems = ssul.children;
               var c = 0, len = domItems.length, showItem = true;
               for (c; c < len; c++) {
                 if (len2 > 0) {
