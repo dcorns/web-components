@@ -107,9 +107,10 @@ module.exports = function(){
           var ssChildren = e.target.parentElement.nextElementSibling.childNodes;
           var searchTxt = ssChildren[0].value;
           var ssul = ssChildren[3];
+          var ss = e.path[4]; //provides access to ss methods & properties from the DOM
           var sf = ssChildren[1].dataset.searchfactor;
             if(ssul){
-              var filter = this.filters, len2 = filter.length;
+              var filter = ss.associations, len2 = filter.length;
               var domItems = ssul.children;
               var c = 0, len = domItems.length, showItem = true;
               for (c; c < len; c++) {
@@ -133,7 +134,7 @@ module.exports = function(){
                 if (showItem) domItems[c].dataset['show'] = 'true';
                 else domItems[c].dataset['show'] = 'false';
               }
-              this.search(ssul, sf, searchTxt);
+              ss.search(ssul, sf, searchTxt);
             }
         });
 
