@@ -53,6 +53,15 @@ module.exports = function(){
         //Add event listeners for sub elements
         this.searchTxt.addEventListener('keyup', function(e){
           console.log(e.target.value);
+          var ss = e.path[4];
+          var searchfactor = e.target.nextElementSibling.dataset.searchfactor;
+          if(searchfactor > 0 ){
+            var iList = e.target.nextElementSibling.nextElementSibling.nextElementSibling;
+            console.dir(iList);
+            ss.search(iList, searchfactor, e.target.value);
+          }
+           //provides access to ss methods from the DOM
+
         });
         this.searchTxt.addEventListener('mouseenter', function(e){
           e.target.style.backgroundColor = 'grey';
@@ -69,7 +78,6 @@ module.exports = function(){
           var ss = e.path[4]; //provides access to ss methods from the DOM
           var searchTxt = btn.previousElementSibling;
           var iList = btn.nextElementSibling.nextElementSibling;
-          console.dir(iList);
           switch (btn.dataset.searchfactor) {
             case '0':
               btn.dataset.searchfactor = '1';
@@ -99,7 +107,6 @@ module.exports = function(){
 
         this.numItemsToDisplay.addEventListener('change', function(e){
             var numToShow = e.target.value;
-          console.dir(e.target.nextElementSibling);
           e.target.nextElementSibling.style.height = (numToShow * 20).toString() + 'px';
         });
 
@@ -109,8 +116,14 @@ module.exports = function(){
           var ssul = ssChildren[3];
           var ss = e.path[4]; //provides access to ss methods & properties from the DOM
           var sf = ssChildren[1].dataset.searchfactor;
+          var selected = [];
+          var chklist = e.target.parentElement.childNodes;
+          var ckloop = 0;
+          for (ckloop; ckloop < chklist.length; ckloop++){
+            if(chklist[ckloop].checked) selected.push(chklist[ckloop].value);
+          }
             if(ssul){
-              var filter = ss.associations, len2 = filter.length;
+              var len2 = selected.length;
               var domItems = ssul.children;
               var c = 0, len = domItems.length, showItem = true;
               for (c; c < len; c++) {
@@ -120,19 +133,20 @@ module.exports = function(){
                   showItem = false;
                   for (c2; c2 < len2; c2++) {
                     if (!(showItem)) {
-                      var c3 = 0, len3 = subjects.length;
-                      for (c3; c3 < len3; c3++) {
-                        if (filter[c2] === subjects[c3].toString()) {
-                          showItem = true;
-                          break;
+                        var c3 = 0, len3 = subjects.length;
+                        for (c3; c3 < len3; c3++) {
+                          if (selected[c2].toString() === subjects[c3].toString()) {
+                            showItem = true;
+                            break;
+                          }
                         }
-                      }
                     }
                     else break;
                   }
                 }
                 if (showItem) domItems[c].dataset['show'] = 'true';
                 else domItems[c].dataset['show'] = 'false';
+                console.log(domItems[c].dataset['show']);
               }
               ss.search(ssul, sf, searchTxt);
             }
@@ -246,7 +260,9 @@ module.exports = function(){
         this.lblError.innerHTML = 'super-select requires the itemlist property to be set as an array with at list one object. Also, the diplayitems property must be set to an array with at least one object of the form [{prop: value}] where value is the property name who\'s values will be used to make up the list';
         var data = this.dataset;
         this.itemlist = obj[data.itemlist]; this.associations = obj[data.associations]; this.displayitems = obj[data.displayitems];
-        if(this.checkItemList()) this.populateList(); this.makeFilter();
+        if(this.checkItemList()){
+          this.populateList(); this.makeFilter();
+        }
 
       };
 
