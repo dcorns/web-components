@@ -17,11 +17,6 @@ module.exports = function(){
       proto.displayitems = [];
       proto.createdCallback = function(){
         var shadowdom = this.createShadowRoot();
-        //console.dir(shadowdom);
-
-        //console.dir(shadowdom.host.dataset);
-        //console.dir(this.shadowRoot.children);
-
 
         shadowdom.innerHTML = '<section><label></label><content></content><section></section><section><input><button data-searchfactor="0">off</button><input class="numToShow" type="number" min="1" max="99" value="5"><ul></ul><section class="descStyle"></section></section></section>';
 
@@ -45,11 +40,12 @@ module.exports = function(){
         listStyle.border = '3px gray solid'; listStyle.display = 'block'; listStyle.width = '250px';
         var itemStyle = this.itemList.style;
         itemStyle.listStyle = 'none'; itemStyle.margin = '0'; itemStyle.padding = '0'; itemStyle.display = 'block';
-        itemStyle.height = '100px'; itemStyle.overflowY = 'scroll';
+        itemStyle.height = '100px'; itemStyle.overflowY = 'scroll'; itemStyle.backgroundColor = 'white';
         var descStyle = this.sSDescriptions.style;
-        descStyle.border = '3px black inset'; descStyle.overflowX = 'scroll';
+        descStyle.border = '3px black inset'; descStyle.overflowX = 'scroll'; descStyle.backgroundColor = 'white';
         var errorStyle = this.lblError.style;
         errorStyle.border = '3px red inset'; errorStyle.width = '200px'; errorStyle.display = 'inline-block'; errorStyle.backgroundColor = '#e1bee7';
+
         //Add event listeners for sub elements
         this.searchTxt.addEventListener('keyup', function(e){
           console.log(e.target.value);
