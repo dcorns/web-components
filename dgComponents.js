@@ -4,9 +4,9 @@
  */
 'use strict';
 
-module.exports = function(obj){
+module.exports = function(){
   return{
-    superSelect: function(){
+    superSelect: function(obj){
       var proto = Object.create(HTMLElement.prototype);
       proto.showAll = false;
       proto.numToShow = 5;

@@ -5,7 +5,7 @@ Currently the components are wrapped in a node module so you can use with node a
 Then invoke the component that you want to use as a property of the object returned by require. Each component will have it's own particular instructions for usage, but at a minimum, you will need to invoke the component in javascript and place it's corresponding tag in your html file. 
 There is only one component right now, but more will follow as I require them on various projects. Feel free to submit your own if you want to contribute.
 ## super-select (Still in development)
-super-select is a super charge selection list element that provided the following enhancements:
+super-select is a super charge selection list element that provides the following enhancements:
 Hover activated synchronized data displays. In line button to change auto complete modes from first letters to letters anywhere to no auto complete. An inline number input for adjusting the height of items window. And check box filters for limiting the list based on multiple criteria.
 ####How to use super-select
 Invoke the element passing it a single object of the following form: items, filters, titles `{datalist:[{dataobject}], filterObjects:[{name:value}], displayItems:[array of strings representing the property names of the properties that you want to display with the selection list. The first string indicates the property to be used in the selection list.]`
