@@ -18,7 +18,7 @@ module.exports = function(){
       proto.createdCallback = function(){
         var shadowdom = this.createShadowRoot();
 
-        shadowdom.innerHTML = '<section><label></label><content></content><section></section><section><input><button data-searchfactor="0">off</button><input class="numToShow" type="number" min="1" max="99" value="5"><ul></ul><section class="descStyle"></section></section></section>';
+        shadowdom.innerHTML = '<section><label></label><content></content><section></section><section><input><button data-searchfactor="0">off</button><input type="number" min="1" max="99" value="5"><ul></ul><section ></section></section></section>';
 
         //setup shadowdom access
         proto.compRoot = this.shadowRoot.children[0];
@@ -313,9 +313,11 @@ module.exports = function(){
           else {
             el.addEventListener('mouseenter', function (e) {
               e.target.style.backgroundColor = 'grey';
+              e.target.style.opacity = .5;
             });
             el.addEventListener('mouseout', function (e) {
               e.target.style.backgroundColor = 'white';
+              e.target.style.opacity = 1;
             });
             this.sSDescriptions.hidden=true;
           }

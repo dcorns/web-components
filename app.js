@@ -27,5 +27,4 @@ obj.datalist = [
 ];
 obj.filterObjects = [{appliesTo: 'appliesTo'}, {name: 'HTML', id: 1}, {name: 'CSS', id: 2}, {name: 'JavaScript', id: 3}, {name: 'Data & Algorithms', id: 4}, {name: 'OOP', id: 5}, {name: 'Terminal/Console', id: 6}, {name: 'GIT', id: 7}, {name: 'General', id: 8}];
 obj.displayItems = [{prop: 'title'}, {prop: 'description', tag: 'label'}, {prop: 'link', tag: 'a'}];
-
 comps.superSelect(obj);
