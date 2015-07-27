@@ -8,7 +8,7 @@ require('webcomponents.js');
 
 var obj = {};
 
-obj.datalist = [
+obj.dataset = [
   {title: 'HTML5 Outliner', description: 'Online tool', link: 'https://gsnedders.html5.org/outliner', appliesTo: [1]}
   , {title: 'HTML5 Game Development', description: 'Game Dev Resource', link: 'http://www.html5gamedevelopment.com/', appliesTo: [1]}
   , {title: 'Code School: Front-end Formations', description: 'Online Course', link: 'https://www.codeschool.com/courses/front-end-formations', appliesTo: [2]}

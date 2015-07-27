@@ -3,7 +3,6 @@
  * Created by dcorns on 6/9/15.
  */
 'use strict';
-
 module.exports = function(){
   return{
     superSelect: function(obj){
@@ -12,9 +11,9 @@ module.exports = function(){
       proto.numToShow = 5;
       proto.totalItems = 0;
       proto.lastItemIndex = 0;
-      proto.itemlist = obj.datalist;
-      proto.associations = obj.filterObjects;
-      proto.displayitems = obj.displayItems;
+      proto.itemlist = [];
+      proto.associations = [];
+      proto.displayitems = [];
       proto.createdCallback = function(){
         var shadowdom = this.createShadowRoot();
 
@@ -254,8 +253,8 @@ module.exports = function(){
         //var ss = this.shadowRoot.children[2]; //lblError = this.shadowRoot.children[0];
         this.sSelect.style.display = 'none';
         this.lblError.innerHTML = 'super-select requires the itemlist property to be set as an array with at list one object. Also, the diplayitems property must be set to an array with at least one object of the form [{prop: value}] where value is the property name who\'s values will be used to make up the list';
-        //var data = this.dataset;
-        //this.itemlist = obj[data.itemlist]; this.associations = obj[data.associations]; this.displayitems = obj[data.displayitems];
+        var data = this.dataset;
+        this.itemlist = obj[data.itemlist]; this.associations = obj[data.associations]; this.displayitems = obj[data.displayitems];
         if(this.checkItemList()){
           this.populateList(); this.makeFilter();
         }
