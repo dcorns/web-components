@@ -7,6 +7,7 @@ module.exports = function(){
   return{
     superSelect: function(obj){
       var proto = Object.create(HTMLElement.prototype);
+      proto.selected = '';
       proto.showAll = false;
       proto.numToShow = 5;
       proto.totalItems = 0;
@@ -31,6 +32,11 @@ module.exports = function(){
         proto.itemList = sSKids[3];
         proto.sSDescriptions = sSKids[4];
 
+        //Set visibility
+        this.numItemsToDisplay.style.display = 'none';
+        this.searchTxt.style.display = 'none';
+        this.preferenceBtn.style.display = 'none';
+
         //Set Internal Styles
         var compRootStyle = this.compRoot.style;
         compRootStyle.display = 'block'; compRootStyle.boxSizing = 'border-box';
@@ -39,13 +45,20 @@ module.exports = function(){
         listStyle.border = '3px gray solid'; listStyle.display = 'block'; listStyle.width = '250px';
         var itemStyle = this.itemList.style;
         itemStyle.listStyle = 'none'; itemStyle.margin = '0'; itemStyle.padding = '0'; itemStyle.display = 'block';
-        itemStyle.height = '100px'; itemStyle.overflowY = 'scroll'; itemStyle.backgroundColor = 'white';
+       // itemStyle.height = '100px'; itemStyle.overflowY = 'scroll'; itemStyle.backgroundColor = 'white';
         var descStyle = this.sSDescriptions.style;
         descStyle.border = '3px black inset'; descStyle.overflowX = 'scroll'; descStyle.backgroundColor = 'white';
         var errorStyle = this.lblError.style;
         errorStyle.border = '3px red inset'; errorStyle.width = '200px'; errorStyle.display = 'inline-block'; errorStyle.backgroundColor = '#e1bee7';
 
-        //Add event listeners for sub elements
+        //Add event listeners
+        //Custom event to expose for user
+
+        //set click event
+        this.itemList.addEventListener('click', function(e){
+          this.selected = e.target;
+        }.bind(this));
+
         this.searchTxt.addEventListener('keyup', function(e){
           console.log(e.target.value);
           var ss = e.path[4];
@@ -256,7 +269,10 @@ module.exports = function(){
         var data = this.dataset;
         this.itemlist = obj[data.itemlist]; this.associations = obj[data.associations]; this.displayitems = obj[data.displayitems];
         if(this.checkItemList()){
-          this.populateList(); this.makeFilter();
+          this.populateList();
+          if(this.associations){
+            this.makeFilter();
+          }
         }
 
       };

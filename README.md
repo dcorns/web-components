@@ -1,11 +1,11 @@
-# web-components
+# dgComponents
 A collection of custom web components. Chrome and Opra provide full support for web components. For all other browsers you will need to require webcomponents.js or another polyfill in your project until such time as they support it.
 ## How to use
 The components are wrapped in a node module so you can use with node and a tool like browserify. Just require it like any other node module that is not installed via npm `var comps = require(./<path>/dgComponents);`
 Then invoke the component that you want to use as a property of the object returned by require. Each component will have it's own particular instructions for usage, but at a minimum, you will need to invoke the component in javascript and place it's corresponding tag in your html file. 
 ## super-select
 super-select is a super charged selection list element that provides the following enhancements:
-Hover activated synchronized data displays. In line button to change auto complete modes: first letters, letters anywhere, no auto complete. An inline number input for adjusting the height of items window. And check box filters for limiting the list based on multiple selection criteria.
+Hover activated synchronized data displays. In line button to change auto complete modes: first letters, letters anywhere, no auto complete. An inline number input for adjusting the height of items window. And check box filters for limiting the list based on multiple selection criteria. When a list item is clicked, the li element is stored in super-select.selected.
 ###How to use super-select
 Each of the super-select features can be used alone or with the others so you can customize the features of your super-select element.
 ####Minimum usage:
