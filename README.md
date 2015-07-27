@@ -20,7 +20,7 @@ var obj = {};
 obj.mycolors = [{color:"red"}, {color:"green"}, {color: "blue"}];
 obj.mycolorkey = [{prop: 'color'}];
 dgComponents.superSelect(obj);`
-html:
+#####html:
 Register the property names of the arrays using `data-item-list` and `data-display-items` attributes as shown here:
 `<super-select data-item-list="mycolorlist" data-display-items="mycolorkey"></super-select>`
 
