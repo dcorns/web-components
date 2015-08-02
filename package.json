@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/dcorns/web-components",
   "devDependencies": {
+    "chai": "^3.2.0",
     "grunt": "^0.4.5",
-    "grunt-browserify": "^3.8.0"
+    "grunt-browserify": "^3.8.0",
+    "mocha": "^2.2.5"
   },
   "dependencies": {
     "webcomponents.js": "^0.7.2"

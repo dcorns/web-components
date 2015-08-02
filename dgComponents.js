@@ -3,9 +3,15 @@
  * Created by dcorns on 6/9/15.
  */
 'use strict';
+/*A module for supplying custom web components
+ */
 module.exports = function(){
   return{
+    /*SuperSelect is a supercharged web component allowing for custom list filters, selectable auto complete, numeric list length sizing, and multiple data bindings to list items.
+    @param obj an object containing an array of objects for the list, and array of objects for the filters, and an array of objects for bound data
+     */
     superSelect: function(obj){
+      if(!(typeof obj === 'object')) throw 'superSelect Requires an object argument';
       var proto = Object.create(HTMLElement.prototype);
       proto.selected = '';
       proto.showAll = false;
@@ -15,9 +21,10 @@ module.exports = function(){
       proto.itemlist = [];
       proto.associations = [];
       proto.displayitems = [];
+      /* Callback that executes when the component is created
+       */
       proto.createdCallback = function(){
         var shadowdom = this.createShadowRoot();
-
         shadowdom.innerHTML = '<section><label></label><content></content><section></section><section><input><button data-searchfactor="0">off</button><input type="number" min="1" max="99" value="5"><ul></ul><section ></section></section></section>';
 
         //setup shadowdom access
@@ -163,7 +170,8 @@ module.exports = function(){
         this.ready();
 
       };
-
+/* makeFilter sets up the custome filter for super select
+ */
       proto.makeFilter = function () {
         var filters = this.filters, len = this.associations.length, c = 1, cb, cblbl, id, name;
         for (c; c < len; c++) {
@@ -189,8 +197,8 @@ module.exports = function(){
           }
         }
       };
-
-
+/* checkItemList validates the item list object array of obj
+ */
       proto.checkItemList = function(){
           //check if itemlist is an Array
           if(!(Object.prototype.toString.call(this.itemlist) === '[object Array]')){
@@ -209,7 +217,8 @@ module.exports = function(){
             }
           }
       };
-
+/* checkDisplayItems validates the data binding object array of obj
+ */
       proto.checkDisplayItems = function(){
         //check if displayItems is an array
         if(!(Object.prototype.toString.call(this.displayitems) === '[object Array]')){
@@ -261,7 +270,8 @@ module.exports = function(){
           return true;
         }
       };
-
+/* ready is the callback that executes when the superselect component is ready.
+ */
       proto.ready = function(){
         //var ss = this.shadowRoot.children[2]; //lblError = this.shadowRoot.children[0];
         this.sSelect.style.display = 'none';
@@ -276,7 +286,8 @@ module.exports = function(){
         }
 
       };
-
+/* populate list sets up the superselect list
+ */
       proto.populateList = function (){
         var items = this.itemlist, len = items.length, c = this.lastItemIndex, el;
         var titles = this.displayitems;
@@ -350,7 +361,8 @@ module.exports = function(){
           }
         }
       };
-
+/* search is for handling the auto complete features of superselect
+ */
       proto.search = function (ssul, sf, searchTxt) {
         if(ssul) {
           var c = 0, domItems = ssul.children, len = domItems.length, showItem;
