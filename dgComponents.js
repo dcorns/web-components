@@ -11,7 +11,13 @@ module.exports = function(){
     @param obj an object containing an array of objects for the list, and array of objects for the filters, and an array of objects for bound data
      */
     superSelect: function(obj){
-      if(!(typeof obj === 'object')) throw 'superSelect Requires an object argument';
+      try {
+        validateObjectArgument(obj);
+      }
+      catch (ex) {
+        console.log(ex);
+        throw ex;
+      }
       var proto = Object.create(HTMLElement.prototype);
       proto.selected = '';
       proto.showAll = false;
@@ -419,7 +425,27 @@ module.exports = function(){
       };
 
       document.registerElement('super-select', {prototype: proto});
+/* validateObjectArgument will throw errors if vObj is not an object with at least 2 properties that each have an array of objects for its value
+ */
+      function validateObjectArgument(vObj){
+        if(!(typeof vObj === 'object')) throw 'superSelect Requires an object argument';
+        var keyCount = 0, objAryCount = 0, arys = [];
+        for (keyCount; keyCount < Object.keys(vObj).length; keyCount++){
+          if(Array.isArray(obj[Object.keys(vObj)[keyCount]])){
+            arys.push(obj[Object.keys(vObj)[keyCount]]);
+            objAryCount ++;
+          }
+        }
+        if (objAryCount < 2) throw 'object argument requires two array properties';
+        //Check arrays for object contents
+        var arraysOfobjectOnlyCount = 0;
+        arys.forEach(function(element, idx, ary){
+          element.forEach(function(el, idx2, sary){
 
+            }
+          )
+        });
+      }
     }
   };
 }();
